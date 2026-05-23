@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evan Legal Quant Stack</title>
+  <script src="https://cdn.tailwindcss.com" async></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" async onload="if(typeof lucide!=='undefined'){try{lucide.createIcons();}catch(e){}}" onerror=""></script>
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            colors: { dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' } }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#f1f5f9;line-height:1.5}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0e1a}
+    ::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+    .card-hover{transition:all .2s ease}
+    .card-hover:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+    .flex{display:flex}.flex-col{flex-direction:column}.flex-shrink-0{flex-shrink:0}.flex-1{flex:1}
+    .items-center{align-items:center}.items-start{align-items:flex-start}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.justify-end{justify-content:flex-end}
+    .grid{display:grid}.grid-cols-4{grid-template-columns:repeat(4,1fr)}.grid-cols-3{grid-template-columns:repeat(3,1fr)}.grid-cols-2{grid-template-columns:repeat(2,1fr)}.grid-cols-11{grid-template-columns:repeat(11,1fr)}
+    .gap-4{gap:1rem}.gap-px{gap:1px}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}
+    .h-screen{height:100vh}.min-h-screen{min-height:100vh}.h-full{height:100%}.h-2{height:.5rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-10{height:2.5rem}.h-32{height:8rem}
+    .w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-10{width:2.5rem}.w-64{width:16rem}.w-24{width:6rem}.w-full{width:100%}
+    .max-w-6xl{max-width:72rem}.max-w-5xl{max-width:64rem}
+    .p-8{padding:2rem}.p-6{padding:1.5rem}.p-4{padding:1rem}.p-3{padding:.75rem}.p-2{padding:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pl-8{padding-left:2rem}.pl-4{padding-left:1rem}
+    .mb-8{margin-bottom:2rem}.mb-6{margin-bottom:1.5rem}.mb-4{margin-bottom:1rem}.mb-3{margin-bottom:.75rem}.mb-2{margin-bottom:.5rem}.mb-1{margin-bottom:.25rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.ml-auto{margin-left:auto}.mr-2{margin-right:.5rem}
+    .space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem * var(--tw-space-y-reverse))}
+    .block{display:block}.hidden{display:none}.inline-block{display:inline-block}.inline-flex{display:inline-flex}
+    .overflow-y-auto{overflow-y:auto}.overflow-hidden{overflow:hidden}
+    .rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.rounded-full{border-radius:9999px}
+    .border{border-width:1px}.border-b{border-bottom-width:1px}.border-l-2{border-left-width:2px}.border-r{border-right-width:1px}
+    .border-slate-800{border-color:#1e293b}.border-slate-700{border-color:#334155}.border-slate-500/30{border-color:rgba(100,116,139,.3)}
+    .text-xs{font-size:.75rem}.text-sm{font-size:.875rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.text-5xl{font-size:3rem}
+    .font-mono{font-family:'JetBrains Mono',monospace}.font-semibold{font-weight:600}.font-bold{font-weight:700}.font-medium{font-weight:500}
+    .text-center{text-align:center}.text-right{text-align:right}.text-left{text-align:left}
+    .bg-\[\#0a0e1a\]{background-color:#0a0e1a}.bg-\[\#111827\]{background-color:#111827}.bg-slate-800{background-color:#1e293b}.bg-slate-800\/50{background-color:rgba(30,41,59,.5)}.bg-slate-700{background-color:#334155}.bg-slate-500\/20{background-color:rgba(100,116,139,.2)}.bg-blue-600{background-color:#2563eb}.bg-blue-500{background-color:#3b82f6}.bg-blue-500\/20{background-color:rgba(59,130,246,.2)}.bg-emerald-500\/20{background-color:rgba(16,185,129,.2)}.bg-red-500\/20{background-color:rgba(239,68,68,.2)}.bg-amber-500\/20{background-color:rgba(245,158,11,.2)}.bg-purple-500\/20{background-color:rgba(168,85,247,.2)}.bg-cyan-500\/20{background-color:rgba(6,182,212,.2)}
+    .text-slate-100{color:#f1f5f9}.text-slate-200{color:#e2e8f0}.text-slate-300{color:#cbd5e1}.text-slate-400{color:#94a3b8}.text-slate-500{color:#64748b}.text-blue-400{color:#60a5fa}.text-emerald-400{color:#34d399}.text-red-400{color:#f87171}.text-amber-400{color:#fbbf24}.text-purple-400{color:#c084fc}.text-cyan-400{color:#22d3ee}.text-white{color:#fff}
+    .appearance-none{-webkit-appearance:none;appearance:none}.cursor-pointer{cursor:pointer}
+    .uppercase{text-transform:uppercase}.tracking-wide{letter-spacing:.05em}
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- Layout -->
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#111827] border-r border-slate-800 flex-shrink-0 flex flex-col">
+    <div class="p-6 border-b border-slate-800">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+          <i data-lucide="scale" class="w-5 h-5 text-blue-400"></i>
+        </div>
+        <div>
+          <div class="font-semibold text-slate-100 text-sm">Evan Legal</div>
+          <div class="text-xs text-slate-500">Quant Workflow Stack</div>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+      <a href="#dashboard" data-nav="dashboard" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </a>
+      <a href="#intake" data-nav="intake" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="file-input" class="w-4 h-4"></i> L1 Intake
+      </a>
+      <a href="#stress-lab" data-nav="stress-lab" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="flask-conical" class="w-4 h-4"></i> L2 Stress Lab
+      </a>
+      <a href="#patterns" data-nav="patterns" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="network" class="w-4 h-4"></i> L3 Patterns
+      </a>
+      <a href="#alignment" data-nav="alignment" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="align-start-horizontal" class="w-4 h-4"></i> L4 Alignment
+      </a>
+      <a href="#outputs" data-nav="outputs" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="file-output" class="w-4 h-4"></i> L5 Outputs
+      </a>
+      <a href="#learning" data-nav="learning" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="brain" class="w-4 h-4"></i> L6 Learning
+      </a>
+      <a href="#credibility" data-nav="credibility" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-colors">
+        <i data-lucide="award" class="w-4 h-4"></i> Credibility
+      </a>
+    </nav>
+    <div class="p-4 border-t border-slate-800">
+      <div class="flex items-center gap-2 text-xs text-slate-500">
+        <i data-lucide="shield-check" class="w-3 h-3"></i> Regulatory Intelligence v2.0
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main-content" class="flex-1 overflow-y-auto p-8"></main>
+</div>
+
+<script>
+// ========== HELPERS ==========
+function getRecColor(rec) {
+  return { PROCEED: 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30',
+           HOLD: 'text-amber-400 bg-amber-500/20 border-amber-500/30',
+           'NO-GO': 'text-red-400 bg-red-500/20 border-red-500/30' }[rec] || 'text-slate-400 bg-slate-500/20';
+}
+function getPriorityColor(p) {
+  return { P0: 'text-red-400 bg-red-500/20', P1: 'text-amber-400 bg-amber-500/20', P2: 'text-blue-400 bg-blue-500/20' }[p] || 'text-slate-400 bg-slate-500/20';
+}
+function getTierColor(tier) {
+  return { HIGH_RISK: 'text-red-400 bg-red-500/20', WEAK: 'text-amber-400 bg-amber-500/20',
+           ACCEPTABLE: 'text-blue-400 bg-blue-500/20', STRONG: 'text-emerald-400 bg-emerald-500/20',
+           HIGHLY_RELIABLE: 'text-purple-400 bg-purple-500/20' }[tier] || 'text-slate-400 bg-slate-500/20';
+}
+function dimBar(label, value, max, color) {
+  max = max || 100; color = color || 'bg-blue-500';
+  return `<div class="mb-2"><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">${label}</span><span class="text-slate-200">${value}</span></div><div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div class="${color} h-full rounded-full" style="width:${Math.min((value/max)*100,100)}%"></div></div></div>`;
+}
+function riskColor(v) {
+  if (v >= 70) return 'bg-red-500';
+  if (v >= 50) return 'bg-amber-500';
+  if (v >= 30) return 'bg-blue-500';
+  return 'bg-emerald-500';
+}
+function recBadge(rec) {
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getRecColor(rec)}">${rec}</span>`;
+}
+function priorityBadge(p) {
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(p)}">${p}</span>`;
+}
+function tierBadge(tier) {
+  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getTierColor(tier)}">${tier}</span>`;
+}
+
+// ========== DATA ==========
+const AppData = {
+  rawInputs: [
+    { type: 'product_proposal', source: 'Product Team', content: 'Proposal for yield-bearing DPT program in Singapore targeting retail users with custody via licensed trust arrangement. Revenue model: spread on yield. Cross-border: none.', status: 'structured' },
+    { type: 'counsel_memo', source: 'External Counsel A', content: 'Opinion that DPT license sufficient for yield program under PSA. No additional licensing required. Risk: low.', status: 'structured' },
+    { type: 'incident_report', source: 'Compliance Team', content: 'KYC gap identified in onboarding flow for 15 high-risk customers. Enhanced due diligence not triggered automatically.', status: 'pending' }
+  ],
+  factPacket: {
+    jurisdiction: 'Singapore', regulator: 'MAS', activity_type: 'Digital Payment Token Service',
+    product_class: 'Yield Program', target_user_type: 'Retail', licensing_category: 'DPT License',
+    revenue_model: 'Yield Spread', custody_model: 'Licensed Trust', cross_border_elements: ['None'],
+    obligations: {
+      licensing_triggers: ['DPT service provision', 'Custody of digital tokens', 'Yield generation activity'],
+      aml_triggers: ['Retail customer onboarding', 'High-risk jurisdiction exposure', 'PEP screening'],
+      reporting_triggers: ['Suspicious transaction reports', 'Large transaction reports', 'Annual compliance report'],
+      disclosure_requirements: ['Risk disclosure to retail', 'Fee structure disclosure', 'Custody arrangement disclosure']
+    },
+    control_representations: {
+      claimed: ['KYC/AML system operational', 'Transaction monitoring active', 'Cold wallet custody'],
+      planned: ['Enhanced due diligence automation', 'Real-time sanctions screening'],
+      assumed: ['Trust license remains valid', 'MAS guidance unchanged']
+    }
+  },
+  stressResult: {
+    final_risk_rating: 58,
+    final_recommendation: 'HOLD',
+    decisive_obligations: ['Fund management licensing under SFA', 'Custody asset segregation requirements', 'Retail suitability assessment'],
+    key_control_gaps: ['Automated EDD not implemented', 'Real-time sanctions screening missing', 'Custody audit trail incomplete'],
+    evidence_checklist: ['Legal opinion on SFA applicability', 'Trust deed verification', 'KYC sample testing results'],
+    regulator_objections: ['Yield program may constitute fund management', 'Retail exposure requires enhanced safeguards', 'Cross-selling with unlicensed products'],
+    scenarios: [
+      {
+        number: 1,
+        agent_positions: {
+          business_advocate: 'The DPT license explicitly covers digital payment token services. Yield generation is incidental to custody, not a separate regulated activity. Proceed with current licensing.',
+          compliance_reviewer: 'While DPT license covers custody, the yield component introduces fund management characteristics. Enhanced controls needed. Recommend hold pending legal clarification.',
+          regulator_proxy: 'MAS has taken enforcement action against similar yield programs. The SFA fund management licensing trigger is a real risk. Expect scrutiny. Recommend hold.',
+          neutral_adjudicator: 'Balancing the positions, the yield mechanism creates sufficient regulatory ambiguity to warrant caution. HOLD pending formal MAS clarification on SFA applicability.'
+        },
+        risk_score: { overall: 62, dimensions: { licensing_risk: 85, aml_risk: 45, conduct_risk: 70, operational_risk: 55, reputational_risk: 60, regulatory_risk: 80, financial_risk: 50, cross_border_risk: 20, consumer_protection_risk: 75, enforcement_risk: 70 } },
+        recommendation: 'HOLD'
+      },
+      {
+        number: 2,
+        agent_positions: {
+          business_advocate: 'With enhanced custody controls and restricted to accredited investors, the program fits within DPT licensing scope. Limit retail exposure to reduce risk.',
+          compliance_reviewer: 'Accredited investor restriction addresses retail suitability concerns. However, custody audit trail gaps remain. Conditional proceed with enhanced monitoring.',
+          regulator_proxy: 'Accredited investor focus reduces consumer protection risk but custody audit concerns remain. May accept with commitment letter on remediation timeline.',
+          neutral_adjudicator: 'The accredited investor restriction meaningfully reduces risk profile. PROCEED conditionally with mandatory remediation of custody audit gaps within 90 days.'
+        },
+        risk_score: { overall: 38, dimensions: { licensing_risk: 45, aml_risk: 40, conduct_risk: 50, operational_risk: 60, reputational_risk: 35, regulatory_risk: 40, financial_risk: 30, cross_border_risk: 15, consumer_protection_risk: 30, enforcement_risk: 35 } },
+        recommendation: 'PROCEED'
+      },
+      {
+        number: 3,
+        agent_positions: {
+          business_advocate: 'Suspend retail offering, focus on institutional clients with bespoke custody. This eliminates consumer protection concerns entirely.',
+          compliance_reviewer: 'Institutional-only offering with qualified investor documentation addresses all licensing triggers. Minimal residual risk.',
+          regulator_proxy: 'Institutional focus with proper classification documentation is low risk. No objections expected from MAS.',
+          neutral_adjudicator: 'The institutional pivot eliminates key risk drivers while preserving business viability. PROCEED with standard controls.'
+        },
+        risk_score: { overall: 22, dimensions: { licensing_risk: 25, aml_risk: 30, conduct_risk: 20, operational_risk: 30, reputational_risk: 15, regulatory_risk: 20, financial_risk: 20, cross_border_risk: 10, consumer_protection_risk: 15, enforcement_risk: 10 } },
+        recommendation: 'PROCEED'
+      }
+    ]
+  },
+  pattern: {
+    jurisdiction: 'Singapore', product_type: 'Yield Program',
+    risk_drivers: ['Fund management characterization', 'Retail exposure', 'Yield mechanism structure'],
+    recurrent_obligations: ['DPT licensing', 'SFA fund management assessment', 'Retail suitability'],
+    recurring_control_weaknesses: ['Automated EDD gaps', 'Custody audit trail', 'Real-time screening'],
+    regulatory_posture_signals: ['MAS increasing scrutiny on yield products', 'Enforcement actions in comparable cases']
+  },
+  riskIndices: {
+    jurisdiction_risk_index: { Singapore: 72, HongKong: 58, UK: 45, UAE: 38, Japan: 65 },
+    obligation_frequency: { 'DPT licensing': 12, 'SFA fund management': 8, 'Retail suitability': 6, 'AML program': 15, 'Custody controls': 9, 'Cross-border licensing': 4 },
+    control_failure_frequency: { 'Automated EDD': 7, 'Custody audit': 6, 'Sanctions screening': 5, 'Transaction monitoring': 4, 'KYC refresh': 3 }
+  },
+  counselMemo: { counsel_name: 'External Counsel A', memo_content: 'DPT license sufficient for yield program. No SFA licensing required. Risk: low. Proceed with standard disclosures.' },
+  alignment: {
+    alignment_score: 72,
+    dimension_scores: { obligation_identification: 0.75, risk_classification: 0.65, evidence_sufficiency: 0.50, assumption_transparency: 0.85, regulator_posture_realism: 0.70 },
+    missing_regulator_objections: ['Yield program may constitute fund management', 'Retail exposure requires enhanced safeguards'],
+    missing_evidence_hooks: ['Legal opinion on SFA applicability', 'Trust deed verification'],
+    overconfidence_flags: ['Risk assessment rated \'low\' despite SFA ambiguity'],
+    suggested_clarification_questions: ['What is MAS\'s current posture on yield-bearing DPT products?', 'Has the SFA fund management trigger been formally assessed?', 'What controls address retail suitability requirements?']
+  },
+  decisionMemo: {
+    title: 'Yield Program — HOLD Decision',
+    executive_summary: 'The proposed yield-bearing DPT program presents significant licensing ambiguity under the SFA fund management regime. While the DPT license covers custody, the yield mechanism creates regulatory overlap. HOLD pending formal MAS clarification.',
+    risk_assessment: 'Overall risk score 58/100 (HOLD tier). Key risks: (1) SFA fund management licensing trigger at 85% severity, (2) Consumer protection concerns for retail exposure at 75%, (3) Regulatory risk at 80% given MAS enforcement trends.',
+    recommendations: ['Obtain formal MAS guidance on SFA applicability', 'Restrict to accredited investors as interim measure', 'Implement automated EDD before launch', 'Establish custody audit trail remediation plan'],
+    next_steps: ['Engage MAS via formal inquiry (2 weeks)', 'Prepare accredited investor restriction protocol (1 week)', 'Initiate EDD automation vendor selection (3 weeks)', 'Schedule custody audit remediation kickoff (1 week)']
+  },
+  escalations: [
+    { priority: 'P0', title: 'SFA Licensing Trigger', description: 'Yield program may trigger fund management licensing under SFA Section eroes. Immediate legal clarification required.', jurisdiction: 'Singapore', status: 'open' },
+    { priority: 'P1', title: 'KYC Gap — 15 High-Risk Customers', description: 'Enhanced due diligence not triggered for 15 high-risk customers during onboarding. Remediation in progress.', jurisdiction: 'Singapore', status: 'in_progress' },
+    { priority: 'P2', title: 'Custody Audit Trail Gap', description: 'Incomplete audit trail for cold wallet custody transfers. Vendor assessment underway.', jurisdiction: 'Singapore', status: 'open' }
+  ],
+  controlInvestments: [
+    { control_name: 'Automated EDD System', priority: 1, estimated_cost: '$180K', risk_reduction: 25, jurisdictions: ['Singapore', 'HongKong'] },
+    { control_name: 'Real-Time Sanctions Screening', priority: 2, estimated_cost: '$120K', risk_reduction: 15, jurisdictions: ['Singapore'] },
+    { control_name: 'Custody Audit Platform', priority: 3, estimated_cost: '$95K', risk_reduction: 12, jurisdictions: ['Singapore', 'UAE'] }
+  ],
+  driftDetections: [
+    { product_id: 'yield-program-sg', previous_score: 62, current_score: 58, drift_detected: true, drift_magnitude: -4, posture_change: 'Improving — retail restriction implemented', detected_at: '2026-04-15' },
+    { product_id: 'yield-program-sg', previous_score: 58, current_score: 55, drift_detected: true, drift_magnitude: -3, posture_change: 'Improving — EDD automation deployed', detected_at: '2026-05-01' },
+    { product_id: 'yield-program-sg', previous_score: 55, current_score: 58, drift_detected: true, drift_magnitude: 3, posture_change: 'Regulatory drift — MAS new guidance', detected_at: '2026-05-15' }
+  ],
+  credibilityScores: [
+    { counsel_name: 'Counsel A', matter_id: 'M-2026-001', dimension_scores: { obligation_identification: 0.90, risk_classification: 0.85, evidence_sufficiency: 0.80, assumption_transparency: 0.88, regulator_posture_realism: 0.82, control_practicality: 0.75 }, weighted_score: 84, risk_tier: 'STRONG' },
+    { counsel_name: 'Counsel B', matter_id: 'M-2026-002', dimension_scores: { obligation_identification: 0.55, risk_classification: 0.45, evidence_sufficiency: 0.60, assumption_transparency: 0.50, regulator_posture_realism: 0.55, control_practicality: 0.65 }, weighted_score: 54, risk_tier: 'WEAK' },
+    { counsel_name: 'Counsel C', matter_id: 'M-2026-003', dimension_scores: { obligation_identification: 0.75, risk_classification: 0.70, evidence_sufficiency: 0.65, assumption_transparency: 0.72, regulator_posture_realism: 0.68, control_practicality: 0.78 }, weighted_score: 71, risk_tier: 'ACCEPTABLE' }
+  ]
+};
+
+// ========== APP ==========
+const App = {
+  currentPage: 'dashboard',
+
+  init() {
+    this.setupNavigation();
+    this.render();
+    // Retry lucide icons if library loads late
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }, 300);
+  },
+
+  setupNavigation() {
+    window.addEventListener('hashchange', () => this.render());
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-nav]');
+      if (link) { e.preventDefault(); window.location.hash = link.getAttribute('data-nav'); }
+    });
+  },
+
+  render() {
+    const hash = window.location.hash.slice(1) || 'dashboard';
+    this.currentPage = hash;
+    const main = document.getElementById('main-content');
+    main.innerHTML = this.getPageContent(hash);
+    this.updateSidebarActive();
+    this.afterRender();
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }, 10);
+  },
+
+  updateSidebarActive() {
+    document.querySelectorAll('.nav-link').forEach(el => {
+      el.classList.remove('bg-slate-800/50', 'text-slate-100', 'border-l-2', 'border-blue-500');
+      el.classList.add('text-slate-400');
+      if (el.getAttribute('data-nav') === this.currentPage) {
+        el.classList.add('bg-slate-800/50', 'text-slate-100');
+        el.classList.remove('text-slate-400');
+      }
+    });
+  },
+
+  afterRender() {
+    if (this.currentPage === 'stress-lab') this.initStressLab();
+    if (this.currentPage === 'intake') this.initIntake();
+    if (this.currentPage === 'credibility') this.initCredibility();
+  },
+
+  initIntake() {
+    const tabs = document.querySelectorAll('.intake-tab');
+    const panels = document.querySelectorAll('.intake-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active', 'border-b-2', 'border-blue-500', 'text-blue-400'));
+        tab.classList.add('active', 'border-b-2', 'border-blue-500', 'text-blue-400');
+        panels.forEach(p => p.classList.add('hidden'));
+        const panel = document.getElementById('panel-' + tab.getAttribute('data-tab'));
+        if (panel) panel.classList.remove('hidden');
+      });
+    });
+  },
+
+  initStressLab() {
+    document.querySelectorAll('.scenario-header').forEach(h => {
+      h.addEventListener('click', () => {
+        const body = h.nextElementSibling;
+        body.classList.toggle('hidden');
+        const icon = h.querySelector('.scenario-chevron');
+        if (icon) icon.style.transform = body.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+    });
+  },
+
+  initCredibility() {
+    const sliders = document.querySelectorAll('.cred-slider');
+    sliders.forEach(s => {
+      s.addEventListener('input', () => {
+        const dims = ['obligation_identification','risk_classification','evidence_sufficiency','assumption_transparency','regulator_posture_realism','control_practicality'];
+        const weights = [0.25,0.20,0.15,0.15,0.15,0.10];
+        let score = 0;
+        dims.forEach((d,i) => {
+          const el = document.getElementById('slider-'+d);
+          const val = el ? parseInt(el.value) : 50;
+          score += val * weights[i];
+        });
+        document.getElementById('live-score').textContent = Math.round(score);
+        let tier = 'HIGH_RISK';
+        if (score >= 85) tier = 'HIGHLY_RELIABLE';
+        else if (score >= 70) tier = 'STRONG';
+        else if (score >= 55) tier = 'ACCEPTABLE';
+        else if (score >= 40) tier = 'WEAK';
+        const tierEl = document.getElementById('live-tier');
+        tierEl.textContent = tier;
+        tierEl.className = `inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTierColor(tier)}`;
+      });
+    });
+  },
+
+  getPageContent(page) {
+    switch (page) {
+      case 'dashboard': return this.pageDashboard();
+      case 'intake': return this.pageIntake();
+      case 'stress-lab': return this.pageStressLab();
+      case 'patterns': return this.pagePatterns();
+      case 'alignment': return this.pageAlignment();
+      case 'outputs': return this.pageOutputs();
+      case 'learning': return this.pageLearning();
+      case 'credibility': return this.pageCredibility();
+      default: return this.pageDashboard();
+    }
+  },
+
+  // ========== DASHBOARD ==========
+  pageDashboard() {
+    const layers = [
+      { num: 1, title: 'L1 Intake', desc: 'Document ingestion & fact structuring', icon: 'file-input', nav: 'intake', stats: 3 },
+      { num: 2, title: 'L2 Stress Lab', desc: 'Multi-agent simulation engine', icon: 'flask-conical', nav: 'stress-lab', stats: 3 },
+      { num: 3, title: 'L3 Patterns', desc: 'Obligation & risk extraction', icon: 'network', nav: 'patterns', stats: 5 },
+      { num: 4, title: 'L4 Alignment', desc: 'Counsel memo alignment check', icon: 'align-start-horizontal', nav: 'alignment', stats: 72 },
+      { num: 5, title: 'L5 Outputs', desc: 'Decision memo & escalations', icon: 'file-output', nav: 'outputs', stats: 4 },
+      { num: 6, title: 'L6 Learning', desc: 'Drift detection & tracking', icon: 'brain', nav: 'learning', stats: 3 },
+      { num: 7, title: 'Credibility', desc: 'Counsel scoring system', icon: 'award', nav: 'credibility', stats: 3 }
+    ];
+    const colors = ['border-blue-500/30','border-emerald-500/30','border-purple-500/30','border-cyan-500/30','border-amber-500/30','border-red-500/30','border-pink-500/30'];
+    const layerCards = layers.map((l,i) => `
+      <a href="#${l.nav}" data-nav="${l.nav}" class="card-hover bg-[#111827] border ${colors[i]} rounded-xl p-6 cursor-pointer block">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <i data-lucide="${l.icon}" class="w-5 h-5 text-slate-300"></i>
+          </div>
+          <span class="text-xs font-mono text-slate-500">L${l.num}</span>
+        </div>
+        <h3 class="font-semibold text-slate-100 mb-1">${l.title}</h3>
+        <p class="text-sm text-slate-400 mb-4">${l.desc}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-2xl font-bold text-slate-100">${l.stats}</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-slate-500"></i>
+        </div>
+      </a>`);
+    return `
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-slate-100 mb-1">Workflow Dashboard</h1>
+          <p class="text-sm text-slate-400">Regulatory intelligence quant workflow overview</p>
+        </div>
+        <div class="grid grid-cols-4 gap-4 mb-8">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2"><i data-lucide="activity" class="w-4 h-4 text-blue-400"></i><span class="text-xs text-slate-400">Active Simulations</span></div>
+            <div class="text-2xl font-bold text-slate-100">3</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2"><i data-lucide="clock" class="w-4 h-4 text-amber-400"></i><span class="text-xs text-slate-400">Pending Reviews</span></div>
+            <div class="text-2xl font-bold text-slate-100">1</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2"><i data-lucide="users" class="w-4 h-4 text-emerald-400"></i><span class="text-xs text-slate-400">Counsel Scored</span></div>
+            <div class="text-2xl font-bold text-slate-100">3</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i><span class="text-xs text-slate-400">Alerts</span></div>
+            <div class="text-2xl font-bold text-slate-100">2</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 mb-4">${layerCards.slice(0,4).join('')}</div>
+        <div class="grid grid-cols-3 gap-4">${layerCards.slice(4).join('')}</div>
+      </div>`;
+  },
+
+  // ========== L1 INTAKE ==========
+  pageIntake() {
+    const inputsHtml = AppData.rawInputs.map(inp => {
+      const typeColor = inp.type === 'product_proposal' ? 'text-purple-400 bg-purple-500/20' : inp.type === 'counsel_memo' ? 'text-blue-400 bg-blue-500/20' : 'text-amber-400 bg-amber-500/20';
+      const statusColor = inp.status === 'structured' ? 'text-emerald-400 bg-emerald-500/20' : 'text-amber-400 bg-amber-500/20';
+      return `<div class="bg-[#111827] border border-slate-800 rounded-lg p-4 mb-3">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs px-2 py-0.5 rounded-full ${typeColor}">${inp.type}</span>
+          <span class="text-xs text-slate-500">${inp.source}</span>
+          <span class="ml-auto text-xs px-2 py-0.5 rounded-full ${statusColor}">${inp.status}</span>
+        </div>
+        <p class="text-sm text-slate-300">${inp.content}</p>
+      </div>`;
+    }).join('');
+    const fp = AppData.factPacket;
+    const fpHtml = `
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Jurisdiction</div><div class="text-sm font-medium text-slate-100">${fp.jurisdiction}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Regulator</div><div class="text-sm font-medium text-slate-100">${fp.regulator}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Activity Type</div><div class="text-sm font-medium text-slate-100">${fp.activity_type}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Product Class</div><div class="text-sm font-medium text-slate-100">${fp.product_class}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Target User</div><div class="text-sm font-medium text-slate-100">${fp.target_user_type}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Licensing</div><div class="text-sm font-medium text-slate-100">${fp.licensing_category}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Revenue Model</div><div class="text-sm font-medium text-slate-100">${fp.revenue_model}</div></div>
+        <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-slate-500 mb-1">Custody Model</div><div class="text-sm font-medium text-slate-100">${fp.custody_model}</div></div>
+      </div>
+      <div class="mb-6">
+        <h4 class="text-sm font-semibold text-slate-200 mb-3">Obligations</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-blue-400 mb-2 font-medium">Licensing Triggers</div>${fp.obligations.licensing_triggers.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-amber-400 mb-2 font-medium">AML Triggers</div>${fp.obligations.aml_triggers.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-cyan-400 mb-2 font-medium">Reporting Triggers</div>${fp.obligations.reporting_triggers.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-purple-400 mb-2 font-medium">Disclosure Requirements</div>${fp.obligations.disclosure_requirements.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-slate-200 mb-3">Control Representations</h4>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-emerald-400 mb-2 font-medium">Claimed</div>${fp.control_representations.claimed.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-blue-400 mb-2 font-medium">Planned</div>${fp.control_representations.planned.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+          <div class="bg-[#0a0e1a] rounded-lg p-3"><div class="text-xs text-amber-400 mb-2 font-medium">Assumed</div>${fp.control_representations.assumed.map(t=>`<div class="text-xs text-slate-300 mb-1">• ${t}</div>`).join('')}</div>
+        </div>
+      </div>`;
+    return `
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">L1 Intake</h1><p class="text-sm text-slate-400">Document ingestion & fact structuring</p></div>
+        <div class="flex border-b border-slate-800 mb-6">
+          <button class="intake-tab active px-4 py-2 text-sm font-medium border-b-2 border-blue-500 text-blue-400" data-tab="upload">Upload</button>
+          <button class="intake-tab px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200" data-tab="inputs">Raw Inputs</button>
+          <button class="intake-tab px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200" data-tab="fact">Fact Packet</button>
+        </div>
+        <div id="panel-upload" class="intake-panel bg-[#111827] border border-slate-800 rounded-xl p-6">
+          <h3 class="text-sm font-semibold text-slate-200 mb-4">Upload Document</h3>
+          <div class="space-y-4 max-w-lg">
+            <div><label class="block text-xs text-slate-400 mb-1">Input Type</label>
+              <select class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200">
+                <option>product_proposal</option><option>counsel_memo</option><option>incident_report</option><option>regulatory_filing</option>
+              </select>
+            </div>
+            <div><label class="block text-xs text-slate-400 mb-1">Source</label>
+              <input type="text" placeholder="e.g. External Counsel A" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600" />
+            </div>
+            <div><label class="block text-xs text-slate-400 mb-1">Content</label>
+              <textarea rows="5" placeholder="Paste document content..." class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600"></textarea>
+            </div>
+            <button class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Submit</button>
+          </div>
+        </div>
+        <div id="panel-inputs" class="intake-panel hidden">${inputsHtml}</div>
+        <div id="panel-fact" class="intake-panel hidden">${fpHtml}</div>
+      </div>`;
+  },
+
+  // ========== L2 STRESS LAB ==========
+  pageStressLab() {
+    const sr = AppData.stressResult;
+    const scenariosHtml = sr.scenarios.map(sc => {
+      const dims = sc.risk_score.dimensions;
+      const dimBars = Object.entries(dims).map(([k,v]) => dimBar(k.replace(/_/g,' '), v, 100, riskColor(v))).join('');
+      return `
+        <div class="bg-[#111827] border border-slate-800 rounded-xl mb-4 overflow-hidden">
+          <div class="scenario-header flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-800/30 transition-colors">
+            <div class="flex items-center gap-4">
+              <span class="text-sm font-mono text-slate-500">S${sc.number}</span>
+              <h3 class="font-semibold text-slate-100">Scenario ${sc.number}</h3>
+              ${recBadge(sc.recommendation)}
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-slate-400">Overall: <span class="font-bold text-slate-200">${sc.risk_score.overall}</span></span>
+              <i data-lucide="chevron-down" class="scenario-chevron w-4 h-4 text-slate-500 transition-transform"></i>
+            </div>
+          </div>
+          <div class="hidden px-6 pb-6 border-t border-slate-800 pt-4">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="border-l-4 border-emerald-500 bg-[#0a0e1a] rounded-r-lg p-4">
+                <div class="text-xs font-semibold text-emerald-400 mb-2 uppercase tracking-wide">Business Advocate</div>
+                <p class="text-sm text-slate-300">${sc.agent_positions.business_advocate}</p>
+              </div>
+              <div class="border-l-4 border-blue-500 bg-[#0a0e1a] rounded-r-lg p-4">
+                <div class="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Compliance Reviewer</div>
+                <p class="text-sm text-slate-300">${sc.agent_positions.compliance_reviewer}</p>
+              </div>
+              <div class="border-l-4 border-red-500 bg-[#0a0e1a] rounded-r-lg p-4">
+                <div class="text-xs font-semibold text-red-400 mb-2 uppercase tracking-wide">Regulator Proxy</div>
+                <p class="text-sm text-slate-300">${sc.agent_positions.regulator_proxy}</p>
+              </div>
+              <div class="border-l-4 border-purple-500 bg-[#0a0e1a] rounded-r-lg p-4">
+                <div class="text-xs font-semibold text-purple-400 mb-2 uppercase tracking-wide">Neutral Adjudicator</div>
+                <p class="text-sm text-slate-300">${sc.agent_positions.neutral_adjudicator}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div class="bg-[#0a0e1a] rounded-lg p-4">
+                <div class="text-xs text-slate-500 mb-3 font-medium">Risk Dimensions</div>
+                ${dimBars}
+              </div>
+              <div class="bg-[#0a0e1a] rounded-lg p-4">
+                <div class="text-xs text-slate-500 mb-3 font-medium">Risk Score Distribution</div>
+                <div class="flex items-end gap-1 h-32">
+                  ${Object.values(dims).map(v => `<div class="flex-1 ${riskColor(v)} rounded-t" style="height:${v}%"></div>`).join('')}
+                </div>
+                <div class="flex justify-between mt-2"><span class="text-xs text-slate-500">0</span><span class="text-xs text-slate-500">100</span></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6 flex items-center justify-between">
+          <div><h1 class="text-2xl font-bold text-slate-100 mb-1">L2 Stress Lab</h1><p class="text-sm text-slate-400">Multi-agent simulation engine</p></div>
+          <button class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"><i data-lucide="play" class="w-4 h-4"></i> Run Simulation</button>
+        </div>
+        <div class="grid grid-cols-4 gap-4 mb-6">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="text-xs text-slate-500 mb-1">Final Risk Rating</div>
+            <div class="text-3xl font-bold ${sr.final_risk_rating >= 60 ? 'text-red-400' : sr.final_risk_rating >= 40 ? 'text-amber-400' : 'text-emerald-400'}">${sr.final_risk_rating}</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="text-xs text-slate-500 mb-1">Final Recommendation</div>
+            <div class="mt-1">${recBadge(sr.final_recommendation)}</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="text-xs text-slate-500 mb-1">Control Gaps</div>
+            <div class="text-xl font-bold text-slate-100">${sr.key_control_gaps.length}</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="text-xs text-slate-500 mb-1">Evidence Items</div>
+            <div class="text-xl font-bold text-slate-100">${sr.evidence_checklist.length}</div>
+          </div>
+        </div>
+        ${scenariosHtml}
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Key Control Gaps</h4>
+            ${sr.key_control_gaps.map(g => `<div class="flex items-center gap-2 mb-2"><i data-lucide="alert-circle" class="w-4 h-4 text-red-400"></i><span class="text-sm text-slate-300">${g}</span></div>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Evidence Checklist</h4>
+            ${sr.evidence_checklist.map(g => `<div class="flex items-center gap-2 mb-2"><i data-lucide="check-square" class="w-4 h-4 text-blue-400"></i><span class="text-sm text-slate-300">${g}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ========== L3 PATTERNS ==========
+  pagePatterns() {
+    const pat = AppData.pattern;
+    const ri = AppData.riskIndices;
+    const maxJri = Math.max(...Object.values(ri.jurisdiction_risk_index));
+    const jriBars = Object.entries(ri.jurisdiction_risk_index).sort((a,b)=>b[1]-a[1]).map(([k,v]) => dimBar(k, v, maxJri, riskColor(v))).join('');
+    const sortedObligations = Object.entries(ri.obligation_frequency).sort((a,b)=>b[1]-a[1]);
+    const sortedControls = Object.entries(ri.control_failure_frequency).sort((a,b)=>b[1]-a[1]);
+    return `
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">L3 Patterns</h1><p class="text-sm text-slate-400">Obligation & risk pattern extraction</p></div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3"><i data-lucide="zap" class="w-4 h-4 text-red-400"></i><h4 class="text-sm font-semibold text-slate-200">Risk Drivers</h4></div>
+            ${pat.risk_drivers.map(d => `<div class="text-sm text-slate-300 mb-1">• ${d}</div>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3"><i data-lucide="refresh-cw" class="w-4 h-4 text-blue-400"></i><h4 class="text-sm font-semibold text-slate-200">Recurrent Obligations</h4></div>
+            ${pat.recurrent_obligations.map(d => `<div class="text-sm text-slate-300 mb-1">• ${d}</div>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3"><i data-lucide="shield-off" class="w-4 h-4 text-amber-400"></i><h4 class="text-sm font-semibold text-slate-200">Control Weaknesses</h4></div>
+            ${pat.recurring_control_weaknesses.map(d => `<div class="text-sm text-slate-300 mb-1">• ${d}</div>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3"><i data-lucide="radar" class="w-4 h-4 text-purple-400"></i><h4 class="text-sm font-semibold text-slate-200">Posture Signals</h4></div>
+            ${pat.regulatory_posture_signals.map(d => `<div class="text-sm text-slate-300 mb-1">• ${d}</div>`).join('')}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Jurisdiction Risk Index</h4>
+            ${jriBars}
+          </div>
+          <div class="space-y-4">
+            <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+              <h4 class="text-sm font-semibold text-slate-200 mb-3">Obligation Frequency</h4>
+              <table class="w-full text-sm">
+                <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">Obligation</th><th class="text-right pb-2">Count</th></tr></thead>
+                <tbody>${sortedObligations.map(([name,count]) => `<tr class="border-b border-slate-800/50"><td class="py-2 text-slate-300">${name}</td><td class="text-right py-2 text-slate-200 font-mono">${count}</td></tr>`).join('')}</tbody>
+              </table>
+            </div>
+            <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+              <h4 class="text-sm font-semibold text-slate-200 mb-3">Control Failure Frequency</h4>
+              <table class="w-full text-sm">
+                <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">Control</th><th class="text-right pb-2">Failures</th></tr></thead>
+                <tbody>${sortedControls.map(([name,count]) => `<tr class="border-b border-slate-800/50"><td class="py-2 text-slate-300">${name}</td><td class="text-right py-2 text-slate-200 font-mono">${count}</td></tr>`).join('')}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ========== L4 ALIGNMENT ==========
+  pageAlignment() {
+    const al = AppData.alignment;
+    const dims = [
+      { key: 'obligation_identification', label: 'Obligation Identification', weight: 25 },
+      { key: 'risk_classification', label: 'Risk Classification', weight: 20 },
+      { key: 'evidence_sufficiency', label: 'Evidence Sufficiency', weight: 15 },
+      { key: 'assumption_transparency', label: 'Assumption Transparency', weight: 15 },
+      { key: 'regulator_posture_realism', label: 'Regulator Posture Realism', weight: 15 }
+    ];
+    const scoreColor = al.alignment_score >= 80 ? 'text-emerald-400' : al.alignment_score >= 60 ? 'text-amber-400' : 'text-red-400';
+    const dimBars = dims.map(d => dimBar(d.label + ' ('+d.weight+'%)', Math.round(al.dimension_scores[d.key]*100), 100, al.dimension_scores[d.key] >= 0.7 ? 'bg-emerald-500' : al.dimension_scores[d.key] >= 0.5 ? 'bg-amber-500' : 'bg-red-500')).join('');
+    return `
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">L4 Alignment</h1><p class="text-sm text-slate-400">Counsel memo alignment check</p></div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-6 text-center">
+            <div class="text-xs text-slate-500 mb-2">Alignment Score</div>
+            <div class="text-5xl font-bold ${scoreColor}">${al.alignment_score}</div>
+            <div class="text-xs text-slate-500 mt-1">/ 100</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 col-span-2">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Dimension Scores</h4>
+            ${dimBars}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2"><i data-lucide="alert-octagon" class="w-4 h-4 text-red-400"></i>Missing Regulator Objections</h4>
+            ${al.missing_regulator_objections.map(o => `<div class="flex items-start gap-2 mb-2"><span class="text-red-400 mt-0.5">-</span><span class="text-sm text-slate-300">${o}</span></div>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4 text-amber-400"></i>Missing Evidence Hooks</h4>
+            ${al.missing_evidence_hooks.map(o => `<div class="flex items-start gap-2 mb-2"><span class="text-amber-400 mt-0.5">!</span><span class="text-sm text-slate-300">${o}</span></div>`).join('')}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4 text-red-400"></i>Overconfidence Flags</h4>
+            ${al.overconfidence_flags.map(f => `<span class="inline-block text-xs px-2 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 mr-2 mb-2">${f}</span>`).join('')}
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2"><i data-lucide="help-circle" class="w-4 h-4 text-cyan-400"></i>Clarification Questions</h4>
+            ${al.suggested_clarification_questions.map((q,i) => `<div class="flex items-start gap-2 mb-2"><span class="text-cyan-400 text-xs mt-1">${i+1}.</span><span class="text-sm text-slate-300">${q}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ========== L5 OUTPUTS ==========
+  pageOutputs() {
+    const dm = AppData.decisionMemo;
+    const ri = AppData.riskIndices;
+    const jurisdictions = Object.keys(ri.jurisdiction_risk_index);
+    const dimensions = ['Licensing','AML','Conduct','Operational','Reputational','Regulatory','Financial','Cross-border','Consumer','Enforcement'];
+    const heatmapData = [
+      [72,45,38,50,48,68,42,22,62,55],
+      [58,52,35,42,40,55,38,28,48,45],
+      [45,48,42,35,30,40,32,25,38,35],
+      [38,35,30,32,28,35,25,20,30,28],
+      [65,55,42,48,45,60,40,30,55,50]
+    ];
+    const heatmapHtml = `
+      <div class="grid grid-cols-11 gap-px bg-slate-800 rounded-lg overflow-hidden">
+        <div class="bg-[#111827] p-2 text-xs text-slate-500"></div>
+        ${jurisdictions.map(j => `<div class="bg-[#111827] p-2 text-xs text-slate-400 font-medium text-center">${j}</div>`).join('')}
+        ${dimensions.map((dim,di) => `
+          <div class="bg-[#111827] p-2 text-xs text-slate-400">${dim}</div>
+          ${heatmapData.map((row,ji) => `<div class="p-2 text-center text-xs font-mono" style="background:rgba(${row[di]>=70?'239,68,68':row[di]>=50?'245,158,11':row[di]>=30?'59,130,246':'16,185,129'},${(row[di]/100)*0.6+0.1});color:${row[di]>=50?'#f1f5f9':'#94a3b8'}">${row[di]}</div>`).join('')}
+        `).join('')}
+      </div>`;
+    return `
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">L5 Outputs</h1><p class="text-sm text-slate-400">Decision memo & escalation management</p></div>
+        <div class="bg-[#111827] border border-slate-800 rounded-xl p-6 mb-6">
+          <div class="flex items-center gap-3 mb-4">
+            <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
+            <h2 class="font-semibold text-slate-100">${dm.title}</h2>
+            ${recBadge('HOLD')}
+          </div>
+          <div class="grid grid-cols-2 gap-6 mb-4">
+            <div>
+              <h4 class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Executive Summary</h4>
+              <p class="text-sm text-slate-300 leading-relaxed">${dm.executive_summary}</p>
+            </div>
+            <div>
+              <h4 class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Risk Assessment</h4>
+              <p class="text-sm text-slate-300 leading-relaxed">${dm.risk_assessment}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h4 class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Recommendations</h4>
+              ${dm.recommendations.map(r => `<div class="flex items-start gap-2 mb-1"><span class="text-blue-400 mt-0.5">-</span><span class="text-sm text-slate-300">${r}</span></div>`).join('')}
+            </div>
+            <div>
+              <h4 class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Next Steps</h4>
+              ${dm.next_steps.map(s => `<div class="flex items-start gap-2 mb-1"><span class="text-emerald-400 mt-0.5">-</span><span class="text-sm text-slate-300">${s}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="bg-[#111827] border border-slate-800 rounded-xl p-6 mb-6">
+          <h3 class="text-sm font-semibold text-slate-200 mb-4">Risk Heatmap — Jurisdiction x Dimension</h3>
+          ${heatmapHtml}
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Active Escalations</h4>
+            <table class="w-full text-sm">
+              <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">Priority</th><th class="text-left pb-2">Title</th><th class="text-left pb-2">Status</th></tr></thead>
+              <tbody>${AppData.escalations.map(e => `<tr class="border-b border-slate-800/50"><td class="py-2">${priorityBadge(e.priority)}</td><td class="py-2 text-slate-300">${e.title}</td><td class="py-2"><span class="text-xs ${e.status === 'open' ? 'text-red-400' : 'text-amber-400'}">${e.status}</span></td></tr>`).join('')}</tbody>
+            </table>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-3">Control Investments</h4>
+            <table class="w-full text-sm">
+              <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">Control</th><th class="text-right pb-2">Cost</th><th class="text-right pb-2">Reduction</th></tr></thead>
+              <tbody>${AppData.controlInvestments.map(c => `<tr class="border-b border-slate-800/50"><td class="py-2 text-slate-300">${c.control_name}</td><td class="text-right py-2 text-slate-200 font-mono">${c.estimated_cost}</td><td class="text-right py-2 text-emerald-400 font-mono">${c.risk_reduction}%</td></tr>`).join('')}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ========== L6 LEARNING ==========
+  pageLearning() {
+    const drifts = AppData.driftDetections;
+    const latest = drifts[drifts.length-1];
+    const trendDir = latest.current_score < drifts[0].current_score ? 'Improving' : latest.current_score > drifts[0].current_score ? 'Deteriorating' : 'Stable';
+    const trendColor = trendDir === 'Improving' ? 'text-emerald-400' : trendDir === 'Deteriorating' ? 'text-red-400' : 'text-amber-400';
+    return `
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">L6 Learning</h1><p class="text-sm text-slate-400">Drift detection & pattern learning</p></div>
+        <div class="grid grid-cols-3 gap-4 mb-8">
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-500 mb-1">Current Score</div>
+            <div class="text-3xl font-bold ${latest.current_score >= 60 ? 'text-red-400' : latest.current_score >= 40 ? 'text-amber-400' : 'text-emerald-400'}">${latest.current_score}</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-500 mb-1">Trend Direction</div>
+            <div class="text-xl font-bold ${trendColor}">${trendDir}</div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-500 mb-1">Last Drift</div>
+            <div class="text-sm text-slate-300">${latest.detected_at}</div>
+            <div class="text-xs ${latest.drift_magnitude > 0 ? 'text-red-400' : 'text-emerald-400'} mt-1">${latest.drift_magnitude > 0 ? '+' : ''}${latest.drift_magnitude}</div>
+          </div>
+        </div>
+        <div class="relative pl-8 mb-8">
+          <div class="absolute left-3 top-0 bottom-0 w-px bg-slate-700"></div>
+          ${drifts.map((d,i) => `
+            <div class="relative mb-6">
+              <div class="absolute -left-8 top-1 w-6 h-6 rounded-full ${d.drift_magnitude > 0 ? 'bg-red-500/20 border-red-500/30' : 'bg-emerald-500/20 border-emerald-500/30'} border flex items-center justify-center">
+                <i data-lucide="${d.drift_magnitude > 0 ? 'trending-up' : 'trending-down'}" class="w-3 h-3 ${d.drift_magnitude > 0 ? 'text-red-400' : 'text-emerald-400'}"></i>
+              </div>
+              <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-mono text-slate-500">${d.detected_at}</span>
+                  <span class="text-xs font-mono ${d.drift_magnitude > 0 ? 'text-red-400' : 'text-emerald-400'}">${d.previous_score} → ${d.current_score} (${d.drift_magnitude > 0 ? '+' : ''}${d.drift_magnitude})</span>
+                </div>
+                <div class="text-sm text-slate-300">${d.posture_change}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+          <h4 class="text-sm font-semibold text-slate-200 mb-3">Historical Comparison</h4>
+          <table class="w-full text-sm">
+            <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">Date</th><th class="text-right pb-2">Score</th><th class="text-right pb-2">Change</th><th class="text-left pb-2 pl-4">Posture</th></tr></thead>
+            <tbody>
+              <tr class="border-b border-slate-800/50"><td class="py-2 text-slate-300">2026-03-01</td><td class="text-right py-2 text-slate-200 font-mono">62</td><td class="text-right py-2 text-slate-500 font-mono">-</td><td class="py-2 pl-4 text-slate-400">Baseline</td></tr>
+              ${drifts.map(d => `<tr class="border-b border-slate-800/50"><td class="py-2 text-slate-300">${d.detected_at}</td><td class="text-right py-2 text-slate-200 font-mono">${d.current_score}</td><td class="text-right py-2 font-mono ${d.drift_magnitude > 0 ? 'text-red-400' : 'text-emerald-400'}">${d.drift_magnitude > 0 ? '+' : ''}${d.drift_magnitude}</td><td class="py-2 pl-4 text-slate-400">${d.posture_change}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  },
+
+  // ========== CREDIBILITY ==========
+  pageCredibility() {
+    const cs = AppData.credibilityScores;
+    const weights = [
+      { key: 'obligation_identification', label: 'Obligation Identification', weight: 25 },
+      { key: 'risk_classification', label: 'Risk Classification', weight: 20 },
+      { key: 'evidence_sufficiency', label: 'Evidence Sufficiency', weight: 15 },
+      { key: 'assumption_transparency', label: 'Assumption Transparency', weight: 15 },
+      { key: 'regulator_posture_realism', label: 'Regulator Posture Realism', weight: 15 },
+      { key: 'control_practicality', label: 'Control Practicality', weight: 10 }
+    ];
+    return `
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-6"><h1 class="text-2xl font-bold text-slate-100 mb-1">Counsel Credibility</h1><p class="text-sm text-slate-400">Scoring & reliability assessment</p></div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="col-span-2 bg-[#111827] border border-slate-800 rounded-xl p-6">
+            <h3 class="text-sm font-semibold text-slate-200 mb-4">Score Calculator</h3>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
+              <div><label class="block text-xs text-slate-400 mb-1">Counsel Name</label><input type="text" placeholder="Enter counsel name" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600" /></div>
+              <div><label class="block text-xs text-slate-400 mb-1">Matter ID</label><input type="text" placeholder="e.g. M-2026-001" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600" /></div>
+            </div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
+              ${weights.map(w => `
+                <div>
+                  <div class="flex justify-between mb-1"><label class="text-xs text-slate-400">${w.label}</label><span class="text-xs text-slate-500">${w.weight}%</span></div>
+                  <input type="range" id="slider-${w.key}" min="0" max="100" value="50" class="cred-slider w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500" />
+                  <div class="text-right text-xs text-blue-400 mt-1" id="val-${w.key}">50</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-6 flex flex-col items-center justify-center">
+            <div class="text-xs text-slate-500 mb-2">Weighted Score</div>
+            <div id="live-score" class="text-5xl font-bold text-blue-400 mb-2">50</div>
+            <div id="live-tier" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTierColor('HIGH_RISK')}">HIGH_RISK</div>
+          </div>
+        </div>
+        <div class="bg-[#111827] border border-slate-800 rounded-xl p-4">
+          <h4 class="text-sm font-semibold text-slate-200 mb-3">Counsel Leaderboard</h4>
+          <table class="w-full text-sm">
+            <thead><tr class="text-xs text-slate-500 border-b border-slate-700"><th class="text-left pb-2">#</th><th class="text-left pb-2">Counsel</th><th class="text-left pb-2">Matter</th><th class="text-right pb-2">Score</th><th class="text-left pb-2 pl-4">Tier</th><th class="text-left pb-2">Breakdown</th></tr></thead>
+            <tbody>${cs.sort((a,b)=>b.weighted_score-a.weighted_score).map((c,i) => `
+              <tr class="border-b border-slate-800/50">
+                <td class="py-3 text-slate-500 font-mono">${i+1}</td>
+                <td class="py-3 text-slate-200 font-medium">${c.counsel_name}</td>
+                <td class="py-3 text-slate-400 font-mono text-xs">${c.matter_id}</td>
+                <td class="py-3 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <div class="w-24 h-2 bg-slate-800 rounded-full overflow-hidden"><div class="${c.weighted_score >= 70 ? 'bg-emerald-500' : c.weighted_score >= 55 ? 'bg-blue-500' : 'bg-amber-500'} h-full rounded-full" style="width:${c.weighted_score}%"></div></div>
+                    <span class="font-mono text-slate-200">${c.weighted_score}</span>
+                  </div>
+                </td>
+                <td class="py-3 pl-4">${tierBadge(c.risk_tier)}</td>
+                <td class="py-3">
+                  <div class="text-xs text-slate-500 space-y-0.5">
+                    ${Object.entries(c.dimension_scores).map(([k,v]) => `<div>${k.replace(/_/g,' ')}: <span class="${v>=0.7?'text-emerald-400':v>=0.5?'text-blue-400':'text-amber-400'}">${Math.round(v*100)}</span></div>`).join('')}
+                  </div>
+                </td>
+              </tr>
+            `).join('')}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+};
+
+// Immediate init + DOMContentLoaded fallback
+App.init();
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+
+</body>
+</html>

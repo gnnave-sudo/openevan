@@ -1,0 +1,49 @@
+{
+  "test_run": "2026-05-18",
+  "system": "Evan Legal Quant Workflow Stack v2.0",
+  "components_tested": [
+    {
+      "layer": "L0 \u2014 Raw Input",
+      "status": "PASS",
+      "detail": "Document submitted, ID assigned"
+    },
+    {
+      "layer": "L1 \u2014 Intake & Structuring",
+      "status": "PASS",
+      "detail": "Ollama structured: Singapore, Yield-Bearing Product, 3 licensing + 3 AML triggers"
+    },
+    {
+      "layer": "L2 \u2014 CSL Stress Lab",
+      "status": "PASS",
+      "detail": "5 scenarios \u00d7 4 agents = 20 agent positions. Risk: 62.5/100. Rec: NO-GO"
+    },
+    {
+      "layer": "L3 \u2014 Pattern Intelligence",
+      "status": "PASS",
+      "detail": "7 risk drivers, 13 recurrent obligations extracted"
+    },
+    {
+      "layer": "L4 \u2014 Counsel Alignment",
+      "status": "PASS",
+      "detail": "Alignment: 36.9/100. 5 gaps identified, 5 clarification questions"
+    },
+    {
+      "layer": "L5 \u2014 Management Output",
+      "status": "PASS",
+      "detail": "Decision memo, 5 escalations, 7 control investments generated"
+    },
+    {
+      "layer": "L6 \u2014 Continuous Learning",
+      "status": "PASS",
+      "detail": "Drift detection active, posture tracking operational"
+    },
+    {
+      "layer": "CS \u2014 Credibility Scoring",
+      "status": "PASS",
+      "detail": "Counsel A: 84.5/100 STRONG, Counsel B: 54.0 WEAK, Counsel C: 71.3 ACCEPTABLE"
+    }
+  ],
+  "full_workflow_chain": "PASS \u2014 Raw Input \u2192 Ollama \u2192 CSL \u2192 Patterns \u2192 Alignment \u2192 Outputs \u2192 Learning \u2192 Credibility",
+  "total_assertions": "24/24 passed",
+  "api_endpoints_tested": 14
+}
