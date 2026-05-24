@@ -1,0 +1,203 @@
+# OpenEvan v12 — Legal Model Router Configuration
+# 9 legal task profiles with automatic model selection
+# Ollama models available on x870 (27.3GB / 32GB vRAM)
+
+profiles:
+  legal_extraction:
+    description: "Extract structured data from legal documents (clauses, parties, terms)"
+    model: "qwen2.5:7b"
+    temperature: 0.1
+    max_tokens: 8192
+    fallback: "qwen3:8b"
+    priority: "accuracy"
+    hint: "fast"
+    use_tokenjuice: true
+    guardrails: ["legal_extractor_guardrail"]
+
+  legal_chat:
+    description: "Conversational Q&A about legal matters"
+    model: "llama3.1:8b"
+    temperature: 0.7
+    max_tokens: 4096
+    fallback: "qwen3:8b"
+    priority: "speed"
+    hint: "fast"
+    streaming: true
+
+  legal_reasoning:
+    description: "Complex legal reasoning, multi-step analysis, CSL simulation"
+    model: "phi4:14b"
+    temperature: 0.3
+    max_tokens: 16384
+    fallback: "deepseek-r1:32b"
+    priority: "quality"
+    hint: "reasoning"
+    context_window: 128000
+
+  legal_vision:
+    description: "Analyze scanned documents, signatures, charts, diagrams"
+    model: "llava:7b"
+    temperature: 0.2
+    max_tokens: 4096
+    fallback: "llama3.1:8b"
+    priority: "quality"
+    hint: "vision"
+    image_support: true
+
+  legal_code:
+    description: "Generate contract clauses, CSL scripting, validation logic"
+    model: "deepseek-coder:6.7b"
+    temperature: 0.1
+    max_tokens: 8192
+    fallback: "qwen2.5:7b"
+    priority: "accuracy"
+    hint: "code"
+    syntax_check: true
+
+  legal_embedding:
+    description: "Generate document embeddings for RAG retrieval"
+    model: "nomic-embed-text"
+    temperature: 0
+    max_tokens: 512
+    fallback: null
+    priority: "speed"
+    hint: "classify"
+    batch_size: 32
+
+  legal_summarize:
+    description: "Summarize long legal documents, depositions, briefs"
+    model: "qwen2.5:7b"
+    temperature: 0.2
+    max_tokens: 4096
+    fallback: "qwen3:8b"
+    priority: "speed"
+    hint: "summarize"
+    use_tokenjuice: true
+
+  legal_compare:
+    description: "Compare documents, find differences, redline generation"
+    model: "deepseek-r1:32b"
+    temperature: 0.1
+    max_tokens: 16384
+    fallback: "phi4:14b"
+    priority: "quality"
+    hint: "reasoning"
+
+  legal_simulate:
+    description: "Contract simulation, dispute scenarios, stress testing"
+    model: "deepseek-r1:32b"
+    temperature: 0.2
+    max_tokens: 16384
+    fallback: "phi4:14b"
+    priority: "quality"
+    hint: "reasoning"
+    use_stresslab: true
+
+# ── Routing Rules ──────────────────────────────────────────────────────────
+
+routing_rules:
+  # Route by keyword detection
+  - keywords: ["compare", "difference", "redline", "track changes", "version"]
+    profile: legal_compare
+    confidence: 0.9
+
+  - keywords: ["extract", "pull out", "find all", "tabular", "table", "spreadsheet"]
+    profile: legal_extraction
+    confidence: 0.85
+
+  - keywords: ["simulate", "dispute", "arbitration", "what if", "scenario"]
+    profile: legal_simulate
+    confidence: 0.9
+
+  - keywords: ["risk", "assess", "evaluate", "score", "stress test"]
+    profile: legal_reasoning
+    confidence: 0.85
+
+  - keywords: ["summarize", "brief", "summary", "tldr"]
+    profile: legal_summarize
+    confidence: 0.9
+
+  - keywords: ["sign", "signature", "packet", "countersign"]
+    profile: legal_chat
+    confidence: 0.7
+
+  - keywords: ["chart", "diagram", "visualize", "structure", "entity"]
+    profile: legal_vision
+    confidence: 0.8
+
+  - keywords: ["clause", "draft", "generate", "write", "language"]
+    profile: legal_code
+    confidence: 0.85
+
+  - keywords: ["search", "find similar", "retrieve", "rag"]
+    profile: legal_embedding
+    confidence: 0.9
+
+# ── Ollama Configuration ─────────────────────────────────────────────────
+
+ollama:
+  host: "http://localhost:11434"
+  request_timeout: 120
+  max_concurrent: 4
+  queue_size: 100
+  pull_policy: "lazy"  # lazy | eager | manual
+  
+  models:
+    - name: "qwen2.5:7b"
+      size_gb: 4.7
+      vram_mb: 5200
+      load_time_ms: 850
+    - name: "llama3.1:8b"
+      size_gb: 4.9
+      vram_mb: 5400
+      load_time_ms: 1200
+    - name: "deepseek-coder:6.7b"
+      size_gb: 3.8
+      vram_mb: 4200
+      load_time_ms: 1100
+    - name: "phi4:14b"
+      size_gb: 9.1
+      vram_mb: 9800
+      load_time_ms: 3400
+    - name: "llava:7b"
+      size_gb: 4.5
+      vram_mb: 5000
+      load_time_ms: 2300
+    - name: "nomic-embed-text"
+      size_gb: 0.275
+      vram_mb: 350
+      load_time_ms: 123
+    - name: "deepseek-r1:32b"
+      size_gb: 19.8
+      vram_mb: 21000
+      load_time_ms: 8500
+      requires_unload_others: true
+
+  # VRAM budget management (32GB total, reserve 4GB for system)
+  vram_budget_mb: 28000
+  eviction_policy: "lru"  # lru | priority | manual
+
+# ── TokenJuice Integration ────────────────────────────────────────────────
+
+tokenjuice:
+  enabled: true
+  endpoint: "http://localhost:8001/api/v1/tokenjuice/compress"
+  apply_to_profiles:
+    - legal_extraction
+    - legal_summarize
+    - legal_compare
+    - legal_reasoning
+  max_input_tokens: 64000
+  min_compression_benefit: 0.2  # Only compress if >20% savings
+
+# ── Metrics ───────────────────────────────────────────────────────────────
+
+metrics:
+  enabled: true
+  collect:
+    - routing_decisions
+    - model_latency
+    - token_usage
+    - vram_utilization
+    - compression_ratio
+  export_interval_seconds: 60
