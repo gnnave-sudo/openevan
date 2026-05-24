@@ -1,0 +1,138 @@
+{
+  "skills": {
+    "entries": [
+      {
+        "id": "evan.redlinenow",
+        "name": "RedlineNow",
+        "description": "Document comparison with structured diff and LCS fallback",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/redlinenow/index.js",
+        "tools": ["compareDocuments", "summarizeChanges", "exportRedline", "listRecent"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.tabular",
+        "name": "Tabular Review",
+        "description": "LLM-powered data extraction with typed columns and verification",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/tabular/index.js",
+        "tools": ["extractFromDocument", "verifyExtraction", "exportCSV", "chatWithData", "manageSchema"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.sigpack",
+        "name": "SigPack IDE",
+        "description": "Signature page extraction, grouping, and signing workflow management",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/sigpack/index.js",
+        "tools": ["extractSignatures", "groupByParty", "createSigningOrder", "exportPacket"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.chartai",
+        "name": "ChartAI",
+        "description": "Entity structure visualization with NL-to-graph parsing",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/chartai/index.js",
+        "tools": ["parseStructure", "visualize", "exportSVG", "detectRelatedEntities"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.redline_agent",
+        "name": "Redline Agent",
+        "description": "DOCX Track Changes generation and AI negotiation",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/redline_agent/index.js",
+        "tools": ["generateTrackChanges", "negotiateClause", "importDOCX"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.contract_sim",
+        "name": "Contract Simulation",
+        "description": "Multi-arbiter dispute simulation and risk assessment",
+        "version": "1.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-legal/contract_sim/index.js",
+        "tools": ["simulateDispute", "assessRisk", "suggestAmendments", "calibrateConfidence"],
+        "env": { "VOS_API": "http://localhost:8000" },
+        "enabled": true
+      },
+      {
+        "id": "evan.stresslab",
+        "name": "CSL Stress Lab",
+        "description": "4-agent adversarial compliance simulation with 10-dimension risk scoring",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-stresslab/SKILL.md",
+        "tools": ["simulate", "getResult", "stats", "triggerForMatter"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      },
+      {
+        "id": "evan.patterns",
+        "name": "Pattern Extractor",
+        "description": "Extract recurring obligations, risk drivers, and compliance patterns",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-patterns/SKILL.md",
+        "tools": ["extract", "library", "riskIndex", "obligations"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      },
+      {
+        "id": "evan.credibility",
+        "name": "Credibility Scorer",
+        "description": "6-dimension counsel scoring with tier classification",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-credibility/SKILL.md",
+        "tools": ["score", "leaderboard", "track", "stats"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      },
+      {
+        "id": "evan.alignment",
+        "name": "Counsel Alignment",
+        "description": "Compare counsel memos against internal positions",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-alignment/SKILL.md",
+        "tools": ["submitMemo", "getResult", "forMatter", "stats"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      },
+      {
+        "id": "evan.learning",
+        "name": "Continuous Learning",
+        "description": "Posture scoring, drift detection, and historical comparison",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-learning/SKILL.md",
+        "tools": ["posture", "recordPosture", "driftTimeline", "detectDrift", "historical"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      },
+      {
+        "id": "evan.intake",
+        "name": "Regulatory Intake",
+        "description": "Submit regulatory text and extract structured FactPackets",
+        "version": "2.0.0",
+        "runtime": "quickjs",
+        "entry": "/root/.openclaw/skills/evan-intake/SKILL.md",
+        "tools": ["submit", "factPacket", "inputs", "packets"],
+        "env": { "V11_API": "http://localhost:8001" },
+        "enabled": true
+      }
+    ]
+  }
+}
